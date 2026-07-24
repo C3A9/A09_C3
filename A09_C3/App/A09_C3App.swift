@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 @main
 struct A09_C3App: App {
@@ -26,6 +27,14 @@ struct A09_C3App: App {
     }()
 
     @State private var translationBridge = TranslationBridge()
+    
+    init() {
+            try? Tips.resetDatastore()
+            try? Tips.configure([
+                .displayFrequency(.immediate),
+                .datastoreLocation(.applicationDefault)
+            ])
+        }
     
     var body: some Scene {
         WindowGroup {
