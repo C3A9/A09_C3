@@ -62,10 +62,26 @@ final class RingkasanViewModel {
         }
 
         do {
-            for item in list where pantauanCache[item.id] == nil {
-                let teks = "\(item.pantauanDate.formatted(date: .abbreviated, time: .omitted)): \(item.pantauanBody)"
-                let poin = try await service.generatePoinPantauan(catatan: teks)
-                pantauanCache[item.id] = CachedPoin(text: poin, generatedAt: Date())
+            for item in list {
+                let teksSekarang = "\(item.pantauanDate.formatted(date: .abbreviated, time: .omitted)): \(item.pantauanBody)"
+
+                // Generate ulang HANYA kalau belum ada di cache, ATAU teksnya sudah beda
+                // dari saat terakhir diringkas (berarti catatan sudah diedit)
+                let perluGenerate: Bool
+                if let cached = pantauanCache[item.id] {
+                    perluGenerate = cached.sourceText != teksSekarang
+                } else {
+                    perluGenerate = true
+                }
+
+                if perluGenerate {
+                    let poin = try await service.generatePoinPantauan(catatan: teksSekarang)
+                    pantauanCache[item.id] = CachedPoin(
+                        sourceText: teksSekarang,
+                        text: poin,
+                        generatedAt: Date()
+                    )
+                }
             }
             RingkasanStorage.savePantauanCache(pantauanCache)
 
@@ -88,10 +104,24 @@ final class RingkasanViewModel {
         }
 
         do {
-            for item in list where konsultasiCache[item.id] == nil {
-                let teks = "\(item.tanggalKonsultasi.formatted(date: .abbreviated, time: .omitted)) - dr. \(item.namaDokter): \(item.content)"
-                let poin = try await service.generatePoinKonsultasi(catatan: teks)
-                konsultasiCache[item.id] = CachedPoin(text: poin, generatedAt: Date())
+            for item in list {
+                let teksSekarang = "\(item.tanggalKonsultasi.formatted(date: .abbreviated, time: .omitted)) - dr. \(item.namaDokter): \(item.content)"
+
+                let perluGenerate: Bool
+                if let cached = konsultasiCache[item.id] {
+                    perluGenerate = cached.sourceText != teksSekarang
+                } else {
+                    perluGenerate = true
+                }
+
+                if perluGenerate {
+                    let poin = try await service.generatePoinKonsultasi(catatan: teksSekarang)
+                    konsultasiCache[item.id] = CachedPoin(
+                        sourceText: teksSekarang,
+                        text: poin,
+                        generatedAt: Date()
+                    )
+                }
             }
             RingkasanStorage.saveKonsultasiCache(konsultasiCache)
 
