@@ -21,6 +21,8 @@ struct AddKonsul: View {
     @State private var showCancelAlert = false
     @State private var errorMessageName: String?
     
+    @FocusState private var isTextFieldFocused: Bool
+    
     private var modalTitle: String {
         konsultasiToEdit == nil ? "Konsultasi Baru" : "Edit Konsultasi"
     }
@@ -70,6 +72,8 @@ struct AddKonsul: View {
                     Text("Nama")
                         .accessibilityLabel("Tuliskan nama dokter")
                 }
+                .focused($isTextFieldFocused)
+                
                 if let errorMessageName {
                     Text(errorMessageName)
                         .font(.caption)
@@ -78,7 +82,7 @@ struct AddKonsul: View {
                 }
                 ExpandableDatePicker(label: "Tanggal konsultasi", selection: $tanggalKonsultasi)
                     .accessibilityLabel("Tanggal konsultasi")
-
+                
             }
             
             Section {
@@ -94,6 +98,7 @@ struct AddKonsul: View {
                         .autocorrectionDisabled()
                         .lineLimit(8...100)
                         .padding(.trailing, 44)
+                        .focused($isTextFieldFocused)
                         
                         DictationButton(
                             dictationManager: dictationManager,
@@ -102,6 +107,11 @@ struct AddKonsul: View {
                         )
                         .padding(8)
                         .accessibilityLabel("Ketuk mikrofon dan mulai berbicara")
+                        .simultaneousGesture(
+                            TapGesture().onEnded {
+                                isTextFieldFocused = false
+                            }
+                        )
                     }
                 }
                 

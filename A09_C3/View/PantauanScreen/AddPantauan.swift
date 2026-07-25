@@ -14,6 +14,8 @@ struct AddPantauan: View {
     
     var pantauanToEdit: PantauanModel?
     
+    @FocusState private var isTextFieldFocused: Bool
+    
     @State private var pantauanDate: Date = .now
     @State private var pantauanBody: String = ""
     @State private var dictationManager = DictationManager()
@@ -59,6 +61,7 @@ struct AddPantauan: View {
                     )
                     .lineLimit(8...40)
                     .padding(.trailing, 44)
+                    .focused($isTextFieldFocused)
                     
                     DictationButton(
                         dictationManager: dictationManager,
@@ -66,6 +69,11 @@ struct AddPantauan: View {
                         onError: { message in errorMessage = message }
                     )
                     .padding(8)
+                    .simultaneousGesture(
+                        TapGesture().onEnded {
+                            isTextFieldFocused = false
+                        }
+                    )
                 }
                 
                 if let errorMessage {
