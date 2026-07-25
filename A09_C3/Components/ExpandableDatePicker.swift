@@ -30,6 +30,7 @@ struct ExpandableDatePicker: View {
     
     var body: some View {
         Button {
+            dismissKeyboard()
             if reduceMotion {
                 isExpanded.toggle()
             } else {
@@ -60,10 +61,10 @@ struct ExpandableDatePicker: View {
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .ignore)
-            .accessibilityLabel(label)
-            .accessibilityValue(accessibleFormattedDate)
-            .accessibilityHint(isExpanded ? "Ketuk dua kali untuk menutup kalender" : "Ketuk dua kali untuk membuka kalender")
-            .accessibilityAddTraits(isExpanded ? [.isButton] : [.isButton])
+        .accessibilityLabel(label)
+        .accessibilityValue(accessibleFormattedDate)
+        .accessibilityHint(isExpanded ? "Ketuk dua kali untuk menutup kalender" : "Ketuk dua kali untuk membuka kalender")
+        .accessibilityAddTraits(isExpanded ? [.isButton] : [.isButton])
         
         if isExpanded {
             DatePicker(
@@ -84,5 +85,9 @@ struct ExpandableDatePicker: View {
             .dateTime.day().month(.wide).year()
             .locale(Locale(identifier: "id_ID"))
         )
+    }
+    
+    private func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
