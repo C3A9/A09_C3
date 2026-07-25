@@ -12,11 +12,11 @@ struct SwipeToDeleteTip: Tip {
     static var shouldShow: Bool = false
 
     var title: Text {
-        Text("Hapus dengan Swipe")
+        Text("Geser untuk menghapus")
     }
 
     var message: Text? {
-        Text("Geser kekiri untuk menghapus catatan")
+        Text("Geser ke kiri untuk menghapus catatan")
     }
 
     var image: Image? {

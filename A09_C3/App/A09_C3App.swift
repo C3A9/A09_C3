@@ -34,6 +34,9 @@ struct A09_C3App: App {
                 .displayFrequency(.immediate),
                 .datastoreLocation(.applicationDefault)
             ])
+        
+        UIView.appearance(whenContainedInInstancesOf: [TipUIPopoverViewController.self])
+            .tintColor = UIColor(named: "tip")
         }
     
     var body: some Scene {
