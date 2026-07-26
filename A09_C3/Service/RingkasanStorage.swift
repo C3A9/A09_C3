@@ -8,6 +8,7 @@
 import Foundation
 
 struct CachedPoin: Codable {
+    let sourceText: String  
     let text: String
     let generatedAt: Date
 }
