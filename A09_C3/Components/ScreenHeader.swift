@@ -10,14 +10,15 @@ import SwiftUI
 struct ScreenHeader: View {
     var title: String
     var icon: String = "plus"
-    var accessibilityActionLabel: String? = nil
     let addAction: () -> Void
 
     var body: some View {
         HStack {
             Text(title)
+                .accessibilityAddTraits(.isHeader)
                 .font(.largeTitle)
                 .fontWeight(.bold)
+                .accessibilityLabel("Judul \(title)")
 
             Spacer()
 
@@ -30,7 +31,8 @@ struct ScreenHeader: View {
                 isProminent: true,
                 action: addAction
             )
-            .accessibilityLabel(Text(indonesianText(accessibilityActionLabel ?? "Tambah \(title)")))
+            .accessibilityLabel("Tambah \(title)")
+            .accessibilityHint("Ketuk dua kali untuk menambahkan item baru")
         }
         .padding(.horizontal, 20)
     }

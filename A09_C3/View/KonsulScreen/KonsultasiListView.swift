@@ -49,7 +49,7 @@ struct KonsulListView: View {
                     EmptyStateView(message: "Ketuk tombol tambah untuk mencatat konsultasi")
                 } else {
                     VStack(spacing: 0) {
-                        Spacer().frame(height: 50)
+                        Spacer().frame(height: 70)
                         List {
                             ForEach(groupedKonsul, id: \.key) { group in
                                 Section {
@@ -59,12 +59,12 @@ struct KonsulListView: View {
                                                 Button {
                                                     konsultasiToDelete = konsul
                                                     showDeleteAlert = true
-                                                } label: {
+                                                }
+                                                label: {
                                                     Label("Hapus", systemImage: "trash")
                                                 }
                                                 .tint(.red)
                                                 .accessibilityLabel("Hapus konsultasi dengan \(konsul.namaDokter)")
-                                                
                                             }
                                     }
                                 } header: {
@@ -97,6 +97,7 @@ struct KonsulListView: View {
         } message: { _ in
             Text("Apakah Anda yakin ingin menghapus konsultasi ini?")
         }
+//        .accessibilityLabel("Apakah anda yakin ingin menghapus konsultasi ini?")
     }
 }
 

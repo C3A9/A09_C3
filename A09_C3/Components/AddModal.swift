@@ -24,11 +24,13 @@ struct AddModal<Content: View>: View {
                     backgroundColor: Color("buttonCross").opacity(0.16),
                     action: onClose
                 )
+                .accessibilityLabel("Tutup \(title)")
 
                 Spacer()
 
                 Text(title)
                     .font(.system(size: 20, weight: .semibold))
+                    .accessibilityLabel(title)
 
                 Spacer()
 
@@ -40,6 +42,11 @@ struct AddModal<Content: View>: View {
                     isProminent: true,
                     action: onSave
                 )
+                .accessibilityLabel("Simpan \(title)")
+                .accessibilityHint(
+                    isSaveEnabled
+                    ? "Ketuk dua kali untuk menyimpan."
+                    : "Tombol masih tidak aktif. Apabila ingin mengaktifkan, silakan mengisi semua isian terlebih dahulu")
             }
             .padding(.horizontal, 20)
             .padding(.top, 20)

@@ -60,6 +60,7 @@ struct CircleIconButton: View {
             backgroundColor: Color.gray.opacity(0.16),
             action: {}
         )
+        .accessibilityLabel("Tombol batal")
         CircleIconButton(
             systemName: "checkmark",
             iconColor: .primary,
@@ -68,6 +69,7 @@ struct CircleIconButton: View {
             isProminent: true,
             action: {}
         )
+        .accessibilityLabel("Tombol simpan tidak aktif")
         CircleIconButton(
             systemName: "checkmark",
             iconColor: .white,
@@ -76,5 +78,6 @@ struct CircleIconButton: View {
             isProminent: true,
             action: {}
         )
+        .accessibilityLabel("Tombol simpan aktif")
     }
 }
