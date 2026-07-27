@@ -98,6 +98,11 @@ struct ObatListView: View {
             if oldValue == 0 && newValue == 1 && !hasShownSwipeDeleteTip {
                 SwipeToDeleteTip.shouldShow = true
                 hasShownSwipeDeleteTip = true
+                 
+                Task {
+                    try? await Task.sleep(for: .seconds(8))
+                    swipeToDeleteTip.invalidate(reason: .tipClosed)
+                    }
             }
         }
         .alert("Hapus Obat?", isPresented: $showDeleteAlert) {
