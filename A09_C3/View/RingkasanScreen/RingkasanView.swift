@@ -10,6 +10,8 @@ import SwiftData
 
 struct RingkasanView: View {
     @Environment(TranslationBridge.self) private var translationBridge
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    
     @State private var viewModel: RingkasanViewModel?
 
     @Query(sort: \PantauanModel.pantauanDate, order: .reverse)
@@ -20,6 +22,12 @@ struct RingkasanView: View {
 
     private var isDataKosong: Bool {
         pantauanList.isEmpty && konsulList.isEmpty
+    }
+    
+    var dynamicLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+        ? AnyLayout(VStackLayout(alignment: .leading))
+        : AnyLayout(HStackLayout(alignment: .center))
     }
 
     var body: some View {
@@ -45,12 +53,15 @@ struct RingkasanView: View {
                                 ScrollView {
                                     VStack(spacing: 16) {
                                         if !viewModel.isModelAvailable {
-                                            Text("Apple Intelligence belum aktif di perangkat ini. Aktifkan melalui Settings untuk memakai fitur ringkasan.")
-                                                .font(.caption)
-                                                .foregroundStyle(.secondary)
-                                                .padding()
+                                            dynamicLayout {
+                                                Text("Apple Intelligence belum aktif di perangkat ini. Aktifkan melalui Settings untuk memakai fitur ringkasan.")
+                                                    .font(.caption)
+                                                    .foregroundStyle(.secondary)
+                                                    .padding()
+                                            }
+                                            .accessibilityElement(children: .combine)
                                         }
-
+                                        
                                         if !pantauanList.isEmpty {
                                             RingkasanSectionView(
                                                 title: "Pantauan",
@@ -60,7 +71,7 @@ struct RingkasanView: View {
                                                 error: viewModel.errorPantauan
                                             )
                                         }
-
+                                        
                                         if !konsulList.isEmpty {
                                             RingkasanSectionView(
                                                 title: "Konsultasi",
@@ -70,7 +81,7 @@ struct RingkasanView: View {
                                                 error: viewModel.errorKonsultasi
                                             )
                                         }
-
+                                        
                                         Text("Informasi yang dirangkum AI dapat mengandung kesalahan atau ketidakakuratan. Selalu periksa kembali informasi penting dan ikuti arahan tenaga kesehatan.")
                                             .font(.caption)
                                             .foregroundStyle(.secondary)
@@ -82,7 +93,8 @@ struct RingkasanView: View {
                                         pantauanList: pantauanList,
                                         konsulList: konsulList
                                     )
-                                }                            } else {
+                                }
+                            } else {
                                 ProgressView()
                             }
                         }

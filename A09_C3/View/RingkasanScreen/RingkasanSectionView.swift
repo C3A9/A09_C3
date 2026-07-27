@@ -13,26 +13,61 @@ struct RingkasanSectionView: View {
     let poinPenting: [String]
     let isGenerating: Bool
     let error: String?
+    
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
+    private var dynamicLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+        ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
+        : AnyLayout(HStackLayout(alignment: .center))
+    }
+    
+    private var accessibilityContentLabel: String {
+        if isGenerating {
+            return "Sedang membuat ringkasan"
+        } else if let error {
+            return "Gagal membuat ringkasan: \(error)"
+        } else if poinPenting.isEmpty {
+            return "Belum ada ringkasan"
+        } else {
+            let cleanedPoints = poinPenting.map {
+                $0.trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            return cleanedPoints.joined(separator: ". ")
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
+            dynamicLayout {
                 Text(title)
                     .font(.headline)
                     .foregroundStyle(.secondary)
-                Spacer()
+                if !dynamicTypeSize.isAccessibilitySize {
+                    Spacer()
+                }
                 RelativeTimeText(date: lastUpdated)
+                
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Ringkasan \(title)")
+            .accessibilityValue(
+                lastUpdated != nil
+                ? "Diperbarui \(lastUpdated!.formatted(.relative(presentation: .named)))"
+                : "Belum pernah diperbarui"
+            )
 
             VStack(alignment: .leading, spacing: 10) {
                 if isGenerating {
                     ProgressView()
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.vertical, 8)
+                        .accessibilityLabel("Sedang membuat ringkasan")
                 } else if let error {
                     Text(error)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                        .accessibilityLabel("Gagal membuat ringkasan")
                 } else if poinPenting.isEmpty {
                     Text("Belum ada ringkasan")
                         .font(.subheadline)
@@ -52,6 +87,8 @@ struct RingkasanSectionView: View {
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(accessibilityContentLabel)
         }
     }
 }
