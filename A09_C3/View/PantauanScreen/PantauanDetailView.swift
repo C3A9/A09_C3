@@ -39,6 +39,8 @@ struct PantauanDetailView: View {
                 .padding()
                 .background(Color(.secondarySystemGroupedBackground))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Tanggal pantauan \(formattedDate)")
                 
                 dynamicLayout {
                     Text(pantauan.pantauanBody)
@@ -46,6 +48,7 @@ struct PantauanDetailView: View {
                         .frame(maxWidth: .infinity, minHeight: 200, alignment: .topLeading)
                         .background(Color(.secondarySystemGroupedBackground))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .accessibilityLabel("Isi pantauannya adalah \(pantauan.pantauanBody)")
                 }
             }
             .padding(.horizontal, 20)
@@ -67,6 +70,7 @@ struct PantauanDetailView: View {
             AddPantauan(pantauanToEdit: pantauan)
                 .interactiveDismissDisabled()
         }
+        .spokenIn("id_ID")
     }
 }
 

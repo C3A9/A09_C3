@@ -28,12 +28,20 @@ struct PickerSection: View {
                 ) {
                     viewModel.selectFrekuensiChip(.jumlahPerHari)
                 }
+                .accessibilityLabel("Jumlah pemakaian per hari, \(viewModel.jumlahPerHari) kali sehari")
+                .accessibilityHint("Ketuk dua kali untuk mengatur jumlah pemakaian per hari")
+                .accessibilityAddTraits(.isButton)
+                
                 FrekuensiChipButton(
                     title: "\(viewModel.jumlahPerKali) \(viewModel.satuanJumlah)",
                     isSelected: viewModel.activeChip == .jumlahPerKali && viewModel.isPickerExpanded
                 ) {
                     viewModel.selectFrekuensiChip(.jumlahPerKali)
                 }
+                .accessibilityLabel("Jumlah per pemakaian, \(viewModel.jumlahPerKali) \(viewModel.satuanJumlah)")
+                .accessibilityHint("Ketuk dua kali untuk mengatur jumlah per pemakaian")
+                .accessibilityAddTraits(.isButton)
+                .spokenIn("id_ID")
             }
 
             if viewModel.isPickerExpanded {
@@ -52,10 +60,19 @@ struct PickerSection: View {
                     height: 120)
                     .clipped()
                     .id(viewModel.activeChip)
-
+                    .accessibilityLabel(
+                        viewModel.activeChip == .jumlahPerHari
+                        ? "Jumlah kali sehari"
+                        : "Jumlah \(viewModel.satuanJumlah)"
+                    )
+                    .accessibilityValue(
+                        "\(viewModel.activeChip == .jumlahPerHari ? viewModel.jumlahPerHari : viewModel.jumlahPerKali)"
+                    )
+                    
                     Text(viewModel.activeChip == .jumlahPerHari ? "kali" : viewModel.satuanJumlah)
                         .font(.body.weight(.semibold))
                         .padding(.trailing, 8)
+                        .accessibilityHidden(true)
                 }
             }
         }

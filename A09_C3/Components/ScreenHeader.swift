@@ -10,14 +10,33 @@ import SwiftUI
 struct ScreenHeader: View {
     var title: String
     var icon: String = "plus"
-    var accessibilityActionLabel: String? = nil
     let addAction: () -> Void
+
+    private var actionAccessibilityLabel: String {
+        switch icon {
+        case "square.and.arrow.up":
+            return "Bagikan \(title)"
+        default:
+            return "Tambah \(title)"
+        }
+    }
+
+    private var actionAccessibilityHint: String {
+        switch icon {
+        case "square.and.arrow.up":
+            return "Ketuk dua kali untuk membagikan \(title.lowercased())"
+        default:
+            return "Ketuk dua kali untuk menambahkan item baru"
+        }
+    }
 
     var body: some View {
         HStack {
             Text(title)
+                .accessibilityAddTraits(.isHeader)
                 .font(.largeTitle)
                 .fontWeight(.bold)
+                .accessibilityLabel("Judul \(title)")
 
             Spacer()
 
@@ -30,9 +49,11 @@ struct ScreenHeader: View {
                 isProminent: true,
                 action: addAction
             )
-            .accessibilityLabel(Text(indonesianText(accessibilityActionLabel ?? "Tambah \(title)")))
+            .accessibilityLabel(actionAccessibilityLabel)
+            .accessibilityHint(actionAccessibilityHint)
         }
         .padding(.horizontal, 20)
+        .spokenIn("id_ID")
     }
 }
 
@@ -42,6 +63,7 @@ struct ScreenHeader: View {
             .ignoresSafeArea()
         VStack {
             ScreenHeader(title: "Obat") {}
+            ScreenHeader(title: "Ringkasan", icon: "square.and.arrow.up") {}
             Spacer()
         }
     }

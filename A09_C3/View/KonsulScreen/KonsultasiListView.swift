@@ -1,5 +1,13 @@
+//
+//  KonsulRowView.swift
+//  A09_C3
+//
+//  Created by Dina on 19/07/26.
+//
+
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct KonsulListView: View {
     @Environment(\.modelContext) private var modelContext
@@ -10,9 +18,16 @@ struct KonsulListView: View {
     @State private var showAddSheet = false
     @State private var showDeleteAlert = false
     
+    @AppStorage("hasShownSwipeDeleteTip") private var hasShownSwipeDeleteTip = false
+    private let swipeToDeleteTip = SwipeToDeleteTip()
+    
     private var konsulViewModel: KonsultasiViewModel {
         KonsultasiViewModel(modelContext: modelContext)
     }
+    
+    private var firstKonsulID: PersistentIdentifier? {
+            allKonsul.first?.id
+        }
     
     //grup berdasarkan bulan
     private var groupedKonsul: [(key: String, items: [KonsulModel])] {
@@ -49,7 +64,7 @@ struct KonsulListView: View {
                     EmptyStateView(message: "Ketuk tombol tambah untuk mencatat konsultasi")
                 } else {
                     VStack(spacing: 0) {
-                        Spacer().frame(height: 50)
+                        Spacer().frame(height: 70)
                         List {
                             ForEach(groupedKonsul, id: \.key) { group in
                                 Section {
@@ -59,13 +74,14 @@ struct KonsulListView: View {
                                                 Button {
                                                     konsultasiToDelete = konsul
                                                     showDeleteAlert = true
+                                                    swipeToDeleteTip.invalidate(reason: .actionPerformed)
                                                 } label: {
                                                     Label("Hapus", systemImage: "trash")
                                                 }
                                                 .tint(.red)
                                                 .accessibilityLabel("Hapus konsultasi dengan \(konsul.namaDokter)")
-                                                
                                             }
+                                            .popoverTip(konsul.id == firstKonsulID ? swipeToDeleteTip : nil)
                                     }
                                 } header: {
                                     Text(group.key)
@@ -73,6 +89,7 @@ struct KonsulListView: View {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.secondary)
                                         .accessibilityLabel("Catatan Bulan \(group.key)")
+                                        .spokenIn("id_ID")
                                         
                                 }
                             }
@@ -83,6 +100,17 @@ struct KonsulListView: View {
                 }
             }
         }
+        .onChange(of: allKonsul.count) { oldValue, newValue in
+            if oldValue == 0 && newValue == 1 && !hasShownSwipeDeleteTip {
+            SwipeToDeleteTip.shouldShow = true
+            hasShownSwipeDeleteTip = true
+                Task {
+                    try? await Task.sleep(for: .seconds(8))
+                    swipeToDeleteTip.invalidate(reason: .tipClosed)
+                    }
+                }
+            }
+        
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: $showAddSheet) {
             AddKonsul()
@@ -90,13 +118,13 @@ struct KonsulListView: View {
         }
         .alert("Hapus Konsultasi?", isPresented: $showDeleteAlert, presenting: konsultasiToDelete) { konsultasi in
             Button("Tidak", role: .cancel) {}
-                .tint(.black)
             Button("Hapus", role: .destructive) {
                 konsulViewModel.delete(konsultasi)
             }
         } message: { _ in
             Text("Apakah Anda yakin ingin menghapus konsultasi ini?")
         }
+//        .accessibilityLabel("Apakah anda yakin ingin menghapus konsultasi ini?")
     }
 }
 

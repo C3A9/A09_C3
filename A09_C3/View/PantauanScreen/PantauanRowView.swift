@@ -31,6 +31,13 @@ struct PantauanRowView: View {
                 }
                 .frame(minHeight: 30)
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(
+                Text("Pantauan tanggal \(formattedDate)")
+            )
+            .accessibilityHint("Ketuk dua kali untuk melihat detail pantauan")
+            .accessibilityAddTraits(.isButton)
+            .spokenIn("id_ID")
         }
     }
 

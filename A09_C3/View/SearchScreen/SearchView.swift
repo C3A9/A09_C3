@@ -27,9 +27,10 @@ struct SearchView: View {
                 .font(.largeTitle.bold())
             
             if trimmedQuery.isEmpty {
-                Text("Ketik kata kunci untuk mencari obat,\npantauan, atau konsultasi.")
+                Text("Ketik kata kunci untuk mencari obat, pantauan, atau konsultasi.")
                     .font(.body)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
                     .transition(.opacity)
             }
         }
@@ -37,6 +38,7 @@ struct SearchView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
         .padding(.bottom, 16)
+        .spokenIn("id_ID")
     }
     
     var body: some View {
