@@ -1,3 +1,10 @@
+//
+//  KonsulRowView.swift
+//  A09_C3
+//
+//  Created by Dina on 19/07/26.
+//
+
 import SwiftUI
 import SwiftData
 import TipKit
@@ -57,7 +64,7 @@ struct KonsulListView: View {
                     EmptyStateView(message: "Ketuk tombol tambah untuk mencatat konsultasi")
                 } else {
                     VStack(spacing: 0) {
-                        Spacer().frame(height: 50)
+                        Spacer().frame(height: 70)
                         List {
                             ForEach(groupedKonsul, id: \.key) { group in
                                 Section {
@@ -73,7 +80,6 @@ struct KonsulListView: View {
                                                 }
                                                 .tint(.red)
                                                 .accessibilityLabel("Hapus konsultasi dengan \(konsul.namaDokter)")
-                                                
                                             }
                                             .popoverTip(konsul.id == firstKonsulID ? swipeToDeleteTip : nil)
                                     }
@@ -111,13 +117,13 @@ struct KonsulListView: View {
         }
         .alert("Hapus Konsultasi?", isPresented: $showDeleteAlert, presenting: konsultasiToDelete) { konsultasi in
             Button("Tidak", role: .cancel) {}
-                .tint(.black)
             Button("Hapus", role: .destructive) {
                 konsulViewModel.delete(konsultasi)
             }
         } message: { _ in
             Text("Apakah Anda yakin ingin menghapus konsultasi ini?")
         }
+//        .accessibilityLabel("Apakah anda yakin ingin menghapus konsultasi ini?")
     }
 }
 

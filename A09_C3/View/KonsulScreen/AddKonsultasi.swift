@@ -23,6 +23,10 @@ struct AddKonsul: View {
     
     @FocusState private var isTextFieldFocused: Bool
     
+    private var viewModel: KonsultasiViewModel {
+            KonsultasiViewModel(modelContext: modelContext)
+        }
+    
     private var modalTitle: String {
         konsultasiToEdit == nil ? "Konsultasi Baru" : "Edit Konsultasi"
     }
@@ -73,6 +77,10 @@ struct AddKonsul: View {
                         .accessibilityLabel("Tuliskan nama dokter")
                 }
                 .focused($isTextFieldFocused)
+                .accessibilityLabel(namaDokter.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                    ? "Tuliskan nama dokter"
+                                    : "Nama dokternya adalah")
+                .accessibilityValue(namaDokter)
                 
                 if let errorMessageName {
                     Text(errorMessageName)
@@ -81,8 +89,9 @@ struct AddKonsul: View {
                         .accessibilityLabel(errorMessageName)
                 }
                 ExpandableDatePicker(label: "Tanggal konsultasi", selection: $tanggalKonsultasi)
-                    .accessibilityLabel("Tanggal konsultasi")
-                
+                    .accessibilityLabel(
+                        "Tanggal konsultasi \(tanggalKonsultasi.formatted(date: .long, time: .omitted))"
+                    )
             }
             
             Section {
@@ -94,7 +103,10 @@ struct AddKonsul: View {
                             prompt: Text("Ketik atau ketuk ikon mikrofon untuk berbicara"),
                             axis: .vertical
                         )
-                        .accessibilityLabel("Ketik disini untuk menulis konsultasi atau ketuk mikrofon")
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                            ? "Ketik di sini untuk menulis konsultasi atau ketuk mikrofon"
+                                            : "Isi konsultasinya adalah \(content), ketuk dua kali untuk mengedit")
                         .autocorrectionDisabled()
                         .lineLimit(8...100)
                         .padding(.trailing, 44)
@@ -130,16 +142,18 @@ struct AddKonsul: View {
                 Button("Batalkan", role: .destructive) {
                     dismiss()
                 }
-                .accessibilityLabel("Batalkan penambahan obat")
+                .accessibilityLabel("Batalkan penambahan")
                 .accessibilityHint("Keluar tanpa menyimpan perubahan")
                 Button("Lanjutkan Mengedit", role: .cancel) {}
                     .accessibilityLabel("Lanjutkan mengedit")
                     .accessibilityHint("Kembali pada halaman tanpa menghapus data")
             }
-            .tint(.black)
         } message: {
             Text(cancelAlertMessage)
         }
+        .onChange(of: namaDokter) {
+                    validateDokterNameLive()
+                }
     }
     
     private func loadExistingData() {
@@ -156,6 +170,18 @@ struct AddKonsul: View {
             dismiss()
         }
     }
+    
+    private func validateDokterNameLive() {
+            let trimmed = namaDokter.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            if trimmed.isEmpty {
+                errorMessageName = nil
+            } else if !viewModel.isValidDokterName(namaDokter) {
+                errorMessageName = "Nama dokter tidak boleh mengandung angka atau simbol (selain titik)"
+            } else {
+                errorMessageName = nil
+            }
+        }
     
     
     private func save() {
