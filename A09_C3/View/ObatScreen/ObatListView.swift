@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import WidgetKit
 
 struct ObatListView: View {
 
@@ -122,7 +123,7 @@ struct ObatListView: View {
                     } catch {
                         print("Gagal menghapus obat: \(error)")
                     }
-
+                    WidgetCenter.shared.reloadTimelines(ofKind: "ObatWidget")
                     obatToDelete = nil
                 }
             }

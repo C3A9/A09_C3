@@ -11,20 +11,7 @@ import TipKit
 
 @main
 struct A09_C3App: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            PantauanModel.self,
-            Obat.self,
-            KonsulModel.self
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    var sharedModelContainer: ModelContainer = SharedModelContainer.container
 
     @State private var translationBridge = TranslationBridge()
     
@@ -44,6 +31,10 @@ struct A09_C3App: App {
             MainTabView()
                 .environment(translationBridge)
                 .overlay(TranslationHostView(bridge: translationBridge))
+                .onOpenURL { url in
+                    if url.scheme == "a09c3" && url.host == "obat" {
+                    }
+                }
         }
         .modelContainer(sharedModelContainer)
     }
