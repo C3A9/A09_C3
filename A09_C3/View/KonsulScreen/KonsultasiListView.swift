@@ -89,6 +89,7 @@ struct KonsulListView: View {
                                         .fontWeight(.semibold)
                                         .foregroundColor(.secondary)
                                         .accessibilityLabel("Catatan Bulan \(group.key)")
+                                        .spokenIn("id_ID")
                                         
                                 }
                             }

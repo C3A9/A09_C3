@@ -38,6 +38,7 @@ struct SearchView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
         .padding(.bottom, 16)
+        .spokenIn("id_ID")
     }
     
     var body: some View {

@@ -80,6 +80,7 @@ struct KonsulDetailView: View {
             AddKonsul(konsultasiToEdit: konsultasi)
                 .interactiveDismissDisabled()
         }
+        .spokenIn("id_ID")
     }
 }
 

@@ -56,6 +56,7 @@ struct SearchResultRowView: View {
             .accessibilityLabel("\(item.primaryText). \(item.secondaryText)")
             .accessibilityHint("Ketuk dua kali untuk melihat detail")
             .accessibilityAddTraits(.isButton)
+            .spokenIn("id_ID")
         }
     }
 }

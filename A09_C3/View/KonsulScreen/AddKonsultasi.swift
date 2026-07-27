@@ -152,8 +152,9 @@ struct AddKonsul: View {
             Text(cancelAlertMessage)
         }
         .onChange(of: namaDokter) {
-                    validateDokterNameLive()
-                }
+            validateDokterNameLive()
+        }
+        .spokenIn("id_ID")
     }
     
     private func loadExistingData() {

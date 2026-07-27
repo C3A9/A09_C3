@@ -29,6 +29,7 @@ struct SearchNotFoundView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Tidak ada hasil untuk \(query). Periksa ejaan atau coba gunakan kata kunci lain")
+        .spokenIn("id_ID")
     }
 }
 

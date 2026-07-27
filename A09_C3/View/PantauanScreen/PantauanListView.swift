@@ -122,6 +122,7 @@ struct PantauanListView: View {
             } message: { _ in
                 Text("Apakah Anda yakin ingin menghapus pantauan ini?")
             }
+            .spokenIn("id_ID")
         }
     }
 }

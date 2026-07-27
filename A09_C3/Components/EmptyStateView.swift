@@ -35,6 +35,7 @@ struct EmptyStateView: View {
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(message)
+        .spokenIn("id_ID")
     }
 }
 

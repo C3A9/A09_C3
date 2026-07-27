@@ -53,6 +53,7 @@ struct ScreenHeader: View {
             .accessibilityHint(actionAccessibilityHint)
         }
         .padding(.horizontal, 20)
+        .spokenIn("id_ID")
     }
 }
 

@@ -70,6 +70,7 @@ struct PantauanDetailView: View {
             AddPantauan(pantauanToEdit: pantauan)
                 .interactiveDismissDisabled()
         }
+        .spokenIn("id_ID")
     }
 }
 

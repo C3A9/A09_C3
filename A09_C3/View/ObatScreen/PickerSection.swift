@@ -41,6 +41,7 @@ struct PickerSection: View {
                 .accessibilityLabel("Jumlah per pemakaian, \(viewModel.jumlahPerKali) \(viewModel.satuanJumlah)")
                 .accessibilityHint("Ketuk dua kali untuk mengatur jumlah per pemakaian")
                 .accessibilityAddTraits(.isButton)
+                .spokenIn("id_ID")
             }
 
             if viewModel.isPickerExpanded {

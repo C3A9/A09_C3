@@ -37,6 +37,7 @@ struct PantauanRowView: View {
             )
             .accessibilityHint("Ketuk dua kali untuk melihat detail pantauan")
             .accessibilityAddTraits(.isButton)
+            .spokenIn("id_ID")
         }
     }
 
