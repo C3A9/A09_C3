@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct KonsulListView: View {
     @Environment(\.modelContext) private var modelContext
@@ -10,9 +11,16 @@ struct KonsulListView: View {
     @State private var showAddSheet = false
     @State private var showDeleteAlert = false
     
+    @AppStorage("hasShownSwipeDeleteTip") private var hasShownSwipeDeleteTip = false
+    private let swipeToDeleteTip = SwipeToDeleteTip()
+    
     private var konsulViewModel: KonsultasiViewModel {
         KonsultasiViewModel(modelContext: modelContext)
     }
+    
+    private var firstKonsulID: PersistentIdentifier? {
+            allKonsul.first?.id
+        }
     
     //grup berdasarkan bulan
     private var groupedKonsul: [(key: String, items: [KonsulModel])] {
@@ -59,13 +67,14 @@ struct KonsulListView: View {
                                                 Button {
                                                     konsultasiToDelete = konsul
                                                     showDeleteAlert = true
-                                                }
-                                                label: {
+                                                    swipeToDeleteTip.invalidate(reason: .actionPerformed)
+                                                } label: {
                                                     Label("Hapus", systemImage: "trash")
                                                 }
                                                 .tint(.red)
                                                 .accessibilityLabel("Hapus konsultasi dengan \(konsul.namaDokter)")
                                             }
+                                            .popoverTip(konsul.id == firstKonsulID ? swipeToDeleteTip : nil)
                                     }
                                 } header: {
                                     Text(group.key)
@@ -83,6 +92,17 @@ struct KonsulListView: View {
                 }
             }
         }
+        .onChange(of: allKonsul.count) { oldValue, newValue in
+            if oldValue == 0 && newValue == 1 && !hasShownSwipeDeleteTip {
+            SwipeToDeleteTip.shouldShow = true
+            hasShownSwipeDeleteTip = true
+                Task {
+                    try? await Task.sleep(for: .seconds(8))
+                    swipeToDeleteTip.invalidate(reason: .tipClosed)
+                    }
+                }
+            }
+        
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: $showAddSheet) {
             AddKonsul()

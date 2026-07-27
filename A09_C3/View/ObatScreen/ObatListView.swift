@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct ObatListView: View {
 
@@ -12,6 +13,9 @@ struct ObatListView: View {
     @State private var showAddSheet = false
     @State private var showDeleteAlert = false
     @State private var obatToDelete: Obat?
+
+    @AppStorage("hasShownSwipeDeleteTip") private var hasShownSwipeDeleteTip = false
+    private let swipeToDeleteTip = SwipeToDeleteTip()
 
     private var filteredObat: [Obat] {
         switch selectedTab {
@@ -34,7 +38,7 @@ struct ObatListView: View {
                     ScreenHeader(title: "Obat") {
                         showAddSheet = true
                     }
-      
+
 
                     Picker("Filter Obat", selection: $selectedTab) {
                         ForEach(ObatTab.allCases) { tab in
@@ -51,7 +55,7 @@ struct ObatListView: View {
                     .accessibilityLabel("Filter obat")
                     .accessibilityValue(selectedTab.rawValue)
                     Spacer()
-                    
+
                     if filteredObat.isEmpty {
                         EmptyStateView(message: "Ketuk tombol tambah untuk menambah obat")
                         Spacer()
@@ -60,20 +64,22 @@ struct ObatListView: View {
                     else {
                         List {
                             Section {
-                                ForEach(filteredObat) { obat in
+                                ForEach(Array(filteredObat.enumerated()), id: \.element.id) { index, obat in
                                     ObatRowView(obat: obat)
                                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                             Button {
                                                 obatToDelete = obat
                                                 showDeleteAlert = true
+                                                swipeToDeleteTip.invalidate(reason: .actionPerformed)
                                             } label: {
                                                 Label("Hapus", systemImage: "trash")
                                             }
                                             .tint(.red)
                                             .accessibilityLabel(
                                                 "Hapus obat \(obat.nama)")
-                                            
+
                                         }
+                                        .popoverTip(index == 0 ? swipeToDeleteTip : nil)
                                 }
                             }
                         }
@@ -86,6 +92,17 @@ struct ObatListView: View {
             .fullScreenCover(isPresented: $showAddSheet) {
                 ObatAddView()
                     .interactiveDismissDisabled()
+            }
+        }
+        .onChange(of: allObat.count) { oldValue, newValue in
+            if oldValue == 0 && newValue == 1 && !hasShownSwipeDeleteTip {
+                SwipeToDeleteTip.shouldShow = true
+                hasShownSwipeDeleteTip = true
+                 
+                Task {
+                    try? await Task.sleep(for: .seconds(8))
+                    swipeToDeleteTip.invalidate(reason: .tipClosed)
+                    }
             }
         }
         .alert("Hapus Obat?", isPresented: $showDeleteAlert) {
@@ -105,14 +122,14 @@ struct ObatListView: View {
                     } catch {
                         print("Gagal menghapus obat: \(error)")
                     }
-                    
+
                     obatToDelete = nil
                 }
             }
             .accessibilityLabel(
                 Text("Hapus obat \(obatToDelete?.nama ?? "")")
             )
-            
+
         } message: {
             Text("Apakah anda yakin untuk menghapus obat ini?")
         }
