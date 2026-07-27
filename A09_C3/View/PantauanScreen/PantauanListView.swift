@@ -77,6 +77,7 @@ struct PantauanListView: View {
                                                     Label("Hapus", systemImage: "trash")
                                                 }
                                                 .tint(.red)
+                                                .accessibilityLabel("Hapus pantauan pada tanggal \(pantauan.pantauanDate)")
                                             }
                                             .popoverTip(pantauan.id == firstPantauanID ? swipeToDeleteTip : nil)
                                     }
@@ -85,6 +86,7 @@ struct PantauanListView: View {
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundColor(.secondary)
+                                        .accessibilityLabel("Catatan Bulan \(group.month)")
                                 }
                             }
                         }

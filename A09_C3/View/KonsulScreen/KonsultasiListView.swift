@@ -1,3 +1,10 @@
+//
+//  KonsulRowView.swift
+//  A09_C3
+//
+//  Created by Dina on 19/07/26.
+//
+
 import SwiftUI
 import SwiftData
 import TipKit
@@ -110,7 +117,6 @@ struct KonsulListView: View {
         }
         .alert("Hapus Konsultasi?", isPresented: $showDeleteAlert, presenting: konsultasiToDelete) { konsultasi in
             Button("Tidak", role: .cancel) {}
-                .tint(.black)
             Button("Hapus", role: .destructive) {
                 konsulViewModel.delete(konsultasi)
             }
