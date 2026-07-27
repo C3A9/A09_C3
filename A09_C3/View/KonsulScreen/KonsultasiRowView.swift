@@ -38,6 +38,7 @@ struct KonsulRowView: View {
         )
         .accessibilityHint("Ketuk dua kali untuk melihat detail konsultasi")
         .accessibilityAddTraits(.isButton)
+        .spokenIn("id_ID")
     }
 }
 

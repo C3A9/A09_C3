@@ -12,6 +12,8 @@ import CloudKit
 struct RingkasanView: View {
     @Environment(TranslationBridge.self) private var translationBridge
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    
     @State private var viewModel: RingkasanViewModel?
     
     @Query(sort: \PantauanModel.pantauanDate, order: .reverse)
@@ -34,6 +36,12 @@ struct RingkasanView: View {
         pantauanList.isEmpty && konsulList.isEmpty
     }
     
+    var dynamicLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+        ? AnyLayout(VStackLayout(alignment: .leading))
+        : AnyLayout(HStackLayout(alignment: .center))
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -64,10 +72,13 @@ struct RingkasanView: View {
                                 ScrollView {
                                     VStack(spacing: 16) {
                                         if !viewModel.isModelAvailable {
-                                            Text("Apple Intelligence belum aktif di perangkat ini. Aktifkan melalui Settings untuk memakai fitur ringkasan.")
-                                                .font(.caption)
-                                                .foregroundStyle(.secondary)
-                                                .padding()
+                                            dynamicLayout {
+                                                Text("Apple Intelligence belum aktif di perangkat ini. Aktifkan melalui Settings untuk memakai fitur ringkasan.")
+                                                    .font(.caption)
+                                                    .foregroundStyle(.secondary)
+                                                    .padding()
+                                            }
+                                            .accessibilityElement(children: .combine)
                                         }
                                         
                                         if !pantauanList.isEmpty {
@@ -95,8 +106,13 @@ struct RingkasanView: View {
                                             .foregroundStyle(.secondary)
                                     }
                                     .padding(.horizontal, 20)
+                                    .spokenIn("id_ID")
                                 }
                                 .refreshable {
+                                    await viewModel.generateSemuaRingkasan(
+                                        pantauanList: pantauanList,
+                                        konsulList: konsulList
+                                    )
                                     await syncThenGenerateRingkasan()
                                 }
                             } else {

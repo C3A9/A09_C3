@@ -49,6 +49,9 @@ struct AddPantauan: View {
         ) {
             Section {
                 ExpandableDatePicker(label: "Tanggal pantauan", selection: $pantauanDate)
+                    .accessibilityLabel(
+                        "Tanggal pantauan \(pantauanDate.formatted(date: .long, time: .omitted))"
+                    )
             }
             
             Section {
@@ -59,6 +62,10 @@ struct AddPantauan: View {
                         prompt: Text("Ketik atau ketuk ikon mikrofon untuk berbicara"),
                         axis: .vertical
                     )
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(pantauanBody.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                        ? "Ketik di sini untuk menulis pantauan atau ketuk mikrofon"
+                                        : "Isi pantauan adalah \(pantauanBody), ketuk dua kali untuk mengedit")
                     .lineLimit(8...40)
                     .padding(.trailing, 44)
                     .focused($isTextFieldFocused)
@@ -69,6 +76,7 @@ struct AddPantauan: View {
                         onError: { message in errorMessage = message }
                     )
                     .padding(8)
+                    .accessibilityLabel("Ketuk mikrofon dan mulai berbicara")
                     .simultaneousGesture(
                         TapGesture().onEnded {
                             isTextFieldFocused = false
@@ -95,6 +103,7 @@ struct AddPantauan: View {
         } message: {
             Text("Jika Anda keluar sekarang, informasi pantauan yang telah diisi tidak akan disimpan.")
         }
+        .spokenIn("id_ID")
     }
     
     private func loadExistingData() {

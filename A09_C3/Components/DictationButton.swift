@@ -39,6 +39,7 @@ struct DictationButton: View {
             guard dictationManager.isRecording else { return }
             text = dictationManager.appendTranscription(existingText: baseText, newText: newValue)
         }
+        .spokenIn("id_ID")
     }
     
     private func toggleDictation() async {

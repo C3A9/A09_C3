@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct PantauanListView: View {
     
@@ -17,9 +18,16 @@ struct PantauanListView: View {
     @State private var pantauanToDelete: PantauanModel?
     @State private var showDeleteAlert = false
     
+    @AppStorage("hasShownSwipeDeleteTip") private var hasShownSwipeDeleteTip = false
+    private let swipeToDeleteTip = SwipeToDeleteTip()
+    
     private var viewModel: PantauanViewModel {
         PantauanViewModel(modelContext: modelContext)
     }
+    
+    private var firstPantauanID: PersistentIdentifier? {
+            allPantauan.first?.id
+        }
     
     private var groupedPantauan: [(month: String, items: [PantauanModel])] {
         let grouped = Dictionary(grouping: allPantauan) { pantauan in
@@ -64,17 +72,21 @@ struct PantauanListView: View {
                                                 Button {
                                                     pantauanToDelete = pantauan
                                                     showDeleteAlert = true
+                                                    swipeToDeleteTip.invalidate(reason: .actionPerformed)
                                                 } label: {
                                                     Label("Hapus", systemImage: "trash")
                                                 }
                                                 .tint(.red)
+                                                .accessibilityLabel("Hapus pantauan pada tanggal \(pantauan.pantauanDate)")
                                             }
+                                            .popoverTip(pantauan.id == firstPantauanID ? swipeToDeleteTip : nil)
                                     }
                                 } header: {
                                     Text(group.month)
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .foregroundColor(.secondary)
+                                        .accessibilityLabel("Catatan Bulan \(group.month)")
                                 }
                             }
                         }
@@ -83,6 +95,19 @@ struct PantauanListView: View {
                     }
                 }
             }
+            
+            .onChange(of: allPantauan.count) { oldValue, newValue in
+                if oldValue == 0 && newValue == 1 && !hasShownSwipeDeleteTip {
+                    SwipeToDeleteTip.shouldShow = true
+                    hasShownSwipeDeleteTip = true
+                     
+                    Task {
+                        try? await Task.sleep(for: .seconds(8))
+                        swipeToDeleteTip.invalidate(reason: .tipClosed)
+                        }
+                }
+            }
+            
             .navigationBarHidden(true)
             .fullScreenCover(isPresented: $showAddSheet) {
                 AddPantauan()
@@ -97,6 +122,7 @@ struct PantauanListView: View {
             } message: { _ in
                 Text("Apakah Anda yakin ingin menghapus pantauan ini?")
             }
+            .spokenIn("id_ID")
         }
     }
 }

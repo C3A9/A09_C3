@@ -20,6 +20,13 @@ class KonsultasiViewModel {
         self.modelContext = modelContext
     }
     
+    func isValidDokterName(_ name: String) -> Bool {
+        let allowedCharacters = CharacterSet.letters
+            .union(.whitespaces)
+            .union(CharacterSet(charactersIn: ".,"))
+        return name.unicodeScalars.allSatisfy { allowedCharacters.contains($0) }
+    }
+    
     func addKonsultasi(namaDokter: String, tanggal: Date, content: String) throws {
         guard !namaDokter.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw KonsultasiValidationError.emptyDokter
