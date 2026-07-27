@@ -109,10 +109,6 @@ struct RingkasanView: View {
                                     .spokenIn("id_ID")
                                 }
                                 .refreshable {
-                                    await viewModel.generateSemuaRingkasan(
-                                        pantauanList: pantauanList,
-                                        konsulList: konsulList
-                                    )
                                     await syncThenGenerateRingkasan()
                                 }
                             } else {

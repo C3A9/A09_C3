@@ -40,7 +40,7 @@ struct A09_C3App: App {
         
         UIView.appearance(whenContainedInInstancesOf: [TipUIPopoverViewController.self])
             .tintColor = UIColor(named: "tip")
-        }
+        
         AppDelegate.modelContainer = sharedModelContainer
     }
     
