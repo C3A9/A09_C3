@@ -36,6 +36,11 @@ struct SearchHistoryRowView: View {
                 }
             }
             .buttonStyle(.plain)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Riwayat pencarian \(item.query)")
+            .accessibilityValue("Dicari \(relativeDate)")
+            .accessibilityHint("Ketuk dua kali untuk mencari ulang")
+            .accessibilityAddTraits(.isButton)
             
             Spacer()
             
@@ -44,6 +49,7 @@ struct SearchHistoryRowView: View {
                     .foregroundStyle(.gray)
             }
             .buttonStyle(.borderless)
+            .accessibilityHint("Ketuk dua kali untuk menghapus dari riwayat")
         }
     }
 }
