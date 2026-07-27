@@ -30,6 +30,13 @@ struct ObatRowView: View {
         return attributed
     }
     
+    private var dosisText: String {
+        switch obat.jenis {
+        case .tablet, .kapsul: return "\(obat.dosis) mg"
+        case .sirup: return "\(obat.dosis) ml"
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             
@@ -60,12 +67,7 @@ struct ObatRowView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.trailing)
-                    Text({
-                        switch obat.jenis {
-                        case .tablet, .kapsul: return "\(obat.dosis) mg"
-                        case .sirup: return "\(obat.dosis) ml"
-                        }
-                    }())
+                    Text(dosisText)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.trailing)
@@ -74,6 +76,12 @@ struct ObatRowView: View {
         }
         //        .padding(.vertical)
         .contentShape(Rectangle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            "Obat \(obat.nama). Frekuensi \(obat.frekuensi)."
+            + (obat.isKondisional && !(obat.kondisiDetail ?? "").isEmpty ? " Kondisi \(obat.kondisiDetail!)." : "")
+            + " \(obat.keterangan.rawValue). Dosis \(dosisText)."
+        )
     }
 }
 

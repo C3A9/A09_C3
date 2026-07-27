@@ -43,7 +43,6 @@ struct ObatAddView: View {
         ) {
             Section {
                 TextField("Tambahkan Nama Obat", text: $viewModel.nama)
-                    .accessibilityLabel(Text(indonesianText("Tulis nama obat disini")))
                 if !viewModel.isValidMedicineName {
                     Text("Nama obat tidak boleh mengandung simbol atau karakter khusus")
                         .font(.caption)
@@ -84,13 +83,21 @@ struct ObatAddView: View {
                             }
                             .multilineTextAlignment(.trailing)
                             .foregroundStyle(.secondary)
-                            .accessibilityLabel("Dosis obat")
-                            .accessibilityValue("\(viewModel.dosis) \(viewModel.satuanDosis)")
                         
                         Text(viewModel.satuanDosis)
                             .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
                     }
                 }
+                
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Dosis")
+                .accessibilityValue(
+                    viewModel.dosis.isEmpty
+                    ? "Belum diisi"
+                    : "\(viewModel.dosis) \(viewModel.satuanDosis)"
+                )
+                .accessibilityHint("Ketuk dua kali untuk mengubah dosis")
                 
                 if viewModel.attemptedSave && viewModel.dosis.trimmingCharacters(in: .whitespaces).isEmpty {
                     Text("Dosis wajib diisi")
@@ -108,8 +115,6 @@ struct ObatAddView: View {
                     reduceMotion ? nil : .default,
                     value: selectedTab
                 )
-                .accessibilityLabel("Keterangan")
-                .accessibilityValue(viewModel.keterangan.rawValue)
                 
                 VStack(alignment: .leading, spacing: 15) {
                     Text("Waktu Minum")
