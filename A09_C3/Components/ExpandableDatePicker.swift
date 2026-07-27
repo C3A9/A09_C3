@@ -64,6 +64,7 @@ struct ExpandableDatePicker: View {
         .accessibilityLabel(label)
         .accessibilityHint(isExpanded ? "Ketuk dua kali untuk menutup kalender" : "Ketuk dua kali untuk membuka kalender")
         .accessibilityAddTraits(isExpanded ? [.isButton] : [.isButton])
+        .spokenIn("id_ID")
         
         if isExpanded {
             DatePicker(

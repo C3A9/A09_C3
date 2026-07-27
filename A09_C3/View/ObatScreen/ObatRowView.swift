@@ -82,6 +82,7 @@ struct ObatRowView: View {
             + (obat.isKondisional && !(obat.kondisiDetail ?? "").isEmpty ? " Kondisi \(obat.kondisiDetail!)." : "")
             + " \(obat.keterangan.rawValue). Dosis \(dosisText)."
         )
+        .spokenIn("id_ID")
     }
 }
 

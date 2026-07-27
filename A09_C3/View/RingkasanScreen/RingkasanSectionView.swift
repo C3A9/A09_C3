@@ -56,6 +56,7 @@ struct RingkasanSectionView: View {
                 ? "Diperbarui \(lastUpdated!.formatted(.relative(presentation: .named)))"
                 : "Belum pernah diperbarui"
             )
+            .spokenIn("id_ID")
 
             VStack(alignment: .leading, spacing: 10) {
                 if isGenerating {
@@ -89,6 +90,7 @@ struct RingkasanSectionView: View {
             .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(accessibilityContentLabel)
+            .spokenIn("id_ID")
         }
     }
 }

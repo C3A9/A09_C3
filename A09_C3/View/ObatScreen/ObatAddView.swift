@@ -163,6 +163,7 @@ struct ObatAddView: View {
             Text("Jika Anda keluar sekarang, informasi obat yang telah diisi tidak akan disimpan.")
         }
         .interactiveDismissDisabled(viewModel.hasUnsavedChanges)
+        .spokenIn("id_ID")
     }
 }
 

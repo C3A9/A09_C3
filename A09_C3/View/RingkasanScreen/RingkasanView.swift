@@ -87,6 +87,7 @@ struct RingkasanView: View {
                                             .foregroundStyle(.secondary)
                                     }
                                     .padding(.horizontal, 20)
+                                    .spokenIn("id_ID")
                                 }
                                 .refreshable {
                                     await viewModel.generateSemuaRingkasan(

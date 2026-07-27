@@ -103,6 +103,7 @@ struct AddPantauan: View {
         } message: {
             Text("Jika Anda keluar sekarang, informasi pantauan yang telah diisi tidak akan disimpan.")
         }
+        .spokenIn("id_ID")
     }
     
     private func loadExistingData() {
