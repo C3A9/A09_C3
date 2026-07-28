@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Observation
+import WidgetKit
 
 // MARK: - Frekuensi chip yang sedang aktif (menentukan wheel picker mana yang tampil)
 enum FrekuensiChip: Equatable {
@@ -78,7 +79,7 @@ final class ObatAddViewModel {
     // AC: User can save the Obat note only when all required information has been provided
     
     var isValidMedicineName: Bool {
-            nama.isEmpty || nama.unicodeScalars.allSatisfy { Self.allowedNameCharacters.contains($0) }
+            nama.unicodeScalars.allSatisfy { Self.allowedNameCharacters.contains($0) }
         }
     
     
@@ -154,6 +155,7 @@ final class ObatAddViewModel {
             kondisiDetail: isKondisional ? kondisiDetail.trimmingCharacters(in: .whitespaces) : nil
         )
         modelContext.insert(newObat)
+//        WidgetCenter.shared.reloadTimelines(ofKind: "ObatWidget")
         dismiss()
     }
 }

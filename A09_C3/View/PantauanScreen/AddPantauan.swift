@@ -91,6 +91,7 @@ struct AddPantauan: View {
                 }
             }
         }
+        .scrollDismissesKeyboard(.immediately)
         .onAppear(perform: loadExistingData)
         .alert("Batalkan penambahan pantauan?", isPresented: $showCancelAlert) {
             Group {

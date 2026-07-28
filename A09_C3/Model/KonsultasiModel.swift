@@ -16,7 +16,10 @@ final class KonsulModel {
     var content: String = ""
     var konsulCreatedAt: Date = Date.now
     var kosulUpdatedAt: Date?
-
+    
+    var careGroup: CareGroupModel?
+    var ckRecordName: String?
+    
     init(
         namaDokter: String = "",
         tanggalKonsultasi: Date = Date.now,

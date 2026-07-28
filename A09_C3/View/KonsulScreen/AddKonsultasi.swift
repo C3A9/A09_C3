@@ -136,6 +136,7 @@ struct AddKonsul: View {
                 }
             }
         }
+        .scrollDismissesKeyboard(.immediately)
         .onAppear(perform: loadExistingData)
         .alert(cancelAlertTitle, isPresented: $showCancelAlert) {
             Group {
