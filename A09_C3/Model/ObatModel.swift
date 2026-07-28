@@ -21,6 +21,9 @@ class Obat {
     var createdAt: Date = Date.now
     var updatedAt: Date = Date.now
     
+    var careGroup: CareGroupModel?
+    var ckRecordName: String?
+    
     init(
         id: UUID = UUID(),
         nama: String = "",
@@ -65,6 +68,6 @@ enum KeteranganObat: String, Codable, CaseIterable, Identifiable {
 enum ObatTab: String, CaseIterable, Identifiable {
     case rutin = "Rutin"
     case kondisional = "Kondisional"
-
+    
     var id: String { rawValue }
 }
