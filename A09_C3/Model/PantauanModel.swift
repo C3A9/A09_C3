@@ -15,6 +15,9 @@ final class PantauanModel {
     var pantauanCreatedAt: Date = Date.now
     var pantauanUpdatedAt: Date?
     
+    var careGroup: CareGroupModel?
+    var ckRecordName: String?
+    
     init(
         pantauanDate: Date = Date.now,
         pantauanBody: String = ""

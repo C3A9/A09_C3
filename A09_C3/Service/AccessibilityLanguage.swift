@@ -7,8 +7,15 @@
 
 import SwiftUI
 
-func indonesianText(_ text: String) -> AttributedString {
-    var label = AttributedString(text)
-    label.setAttributes(AttributeContainer([.accessibilitySpeechLanguage: "id_ID"]))
-    return label
+struct SpeechLocale: ViewModifier {
+    let identifier: String
+    func body(content: Content) -> some View {
+        content.environment(\.locale, Locale(identifier: identifier))
+    }
+}
+
+extension View {
+    func spokenIn(_ identifier: String) -> some View {
+        modifier(SpeechLocale(identifier: identifier))
+    }
 }

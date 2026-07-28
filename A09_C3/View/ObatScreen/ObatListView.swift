@@ -55,6 +55,7 @@ struct ObatListView: View {
                     .padding(.horizontal)
                     .accessibilityLabel("Filter obat")
                     .accessibilityValue(selectedTab.rawValue)
+                    .accessibilityHint("Pilih untuk menampilkan obat rutin atau kondisional")
                     Spacer()
 
                     if filteredObat.isEmpty {
@@ -78,7 +79,8 @@ struct ObatListView: View {
                                             .tint(.red)
                                             .accessibilityLabel(
                                                 "Hapus obat \(obat.nama)")
-
+                                            .accessibilityHint("Ketuk dua kali untuk menghapus obat ini")
+                                            
                                         }
                                         .popoverTip(index == 0 ? swipeToDeleteTip : nil)
                                 }
@@ -134,6 +136,7 @@ struct ObatListView: View {
         } message: {
             Text("Apakah anda yakin untuk menghapus obat ini?")
         }
+        .spokenIn("id_ID")
     }
 }
 

@@ -12,6 +12,24 @@ struct ScreenHeader: View {
     var icon: String = "plus"
     let addAction: () -> Void
 
+    private var actionAccessibilityLabel: String {
+        switch icon {
+        case "square.and.arrow.up":
+            return "Bagikan \(title)"
+        default:
+            return "Tambah \(title)"
+        }
+    }
+
+    private var actionAccessibilityHint: String {
+        switch icon {
+        case "square.and.arrow.up":
+            return "Ketuk dua kali untuk membagikan \(title.lowercased())"
+        default:
+            return "Ketuk dua kali untuk menambahkan item baru"
+        }
+    }
+
     var body: some View {
         HStack {
             Text(title)
@@ -31,10 +49,11 @@ struct ScreenHeader: View {
                 isProminent: true,
                 action: addAction
             )
-            .accessibilityLabel("Tambah \(title)")
-            .accessibilityHint("Ketuk dua kali untuk menambahkan item baru")
+            .accessibilityLabel(actionAccessibilityLabel)
+            .accessibilityHint(actionAccessibilityHint)
         }
         .padding(.horizontal, 20)
+        .spokenIn("id_ID")
     }
 }
 
@@ -44,6 +63,7 @@ struct ScreenHeader: View {
             .ignoresSafeArea()
         VStack {
             ScreenHeader(title: "Obat") {}
+            ScreenHeader(title: "Ringkasan", icon: "square.and.arrow.up") {}
             Spacer()
         }
     }
