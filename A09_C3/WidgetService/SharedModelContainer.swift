@@ -15,7 +15,9 @@ enum SharedModelContainer {
         let schema = Schema([
             Obat.self,
             PantauanModel.self,
-            KonsulModel.self
+            KonsulModel.self,
+            CareGroupModel.self,
+            
         ])
 
         guard let groupURL = FileManager.default

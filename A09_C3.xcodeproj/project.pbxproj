@@ -78,6 +78,7 @@
 		E9CA05D63017448000FD23E9 /* Exceptions for "A09_C3" folder in "ObatWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Model/CareGroupModel.swift,
 				Model/KonsultasiModel.swift,
 				Model/ObatModel.swift,
 				Model/PantauanModel.swift,
@@ -85,6 +86,7 @@
 				WidgetService/SelectKategoriIntent.swift,
 				WidgetService/SharedDefaults.swift,
 				WidgetService/SharedModelContainer.swift,
+				WidgetService/WidgetRefreshObserver.swift,
 			);
 			target = E9CA059F30173ED900FD23E9 /* ObatWidgetExtension */;
 		};

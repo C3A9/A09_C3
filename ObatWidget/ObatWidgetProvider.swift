@@ -13,6 +13,7 @@ struct ObatWidgetItem: Identifiable {
     let nama: String
     let dosis: String
     let frekuensi: String
+    let kondisiDetail: String?
 }
 
 struct ObatEntry: TimelineEntry {
@@ -27,7 +28,7 @@ struct ObatWidgetProvider: TimelineProvider {
             date: .now,
             selectedKategori: .rutin,
             items: [
-                ObatWidgetItem(id: UUID(), nama: "Paracetamol", dosis: "500",frekuensi: "3 kali sehari")
+                ObatWidgetItem(id: UUID(), nama: "Paracetamol", dosis: "500", frekuensi: "1 kali sehari, 1 Tablet", kondisiDetail: nil)
             ]
         )
     }
@@ -62,7 +63,8 @@ struct ObatWidgetProvider: TimelineProvider {
                 id: obat.id,
                 nama: obat.nama,
                 dosis: obat.dosis,
-                frekuensi: obat.frekuensi
+                frekuensi: obat.frekuensi,
+                kondisiDetail: obat.kondisiDetail
             )
         }
 
