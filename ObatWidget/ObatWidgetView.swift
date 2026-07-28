@@ -2,8 +2,6 @@
 //  ObatWidgetView.swift
 //  ObatWidgetExtension
 //
-//  Created by Muhammad Dzakki Abdullah on 27/07/26.
-//
 
 import SwiftUI
 import WidgetKit
@@ -13,8 +11,20 @@ struct ObatWidgetView: View {
     @Environment(\.widgetFamily) var family
     let entry: ObatEntry
 
+    private var listAreaHeight: CGFloat {
+        family == .systemLarge ? 224 : 90
+    }
+
     private var itemLimit: Int {
-        family == .systemLarge ? 5 : 3
+        switch (family, entry.selectedKategori) {
+        case (.systemLarge, .kondisional): return 5
+        case (.systemLarge, .rutin): return 7
+        case (_, .kondisional): return 2
+        default: return 3  
+        }
+    }
+    private var rowHeight: CGFloat {
+        listAreaHeight / CGFloat(itemLimit)
     }
 
     private var displayedItems: [ObatWidgetItem] {
@@ -23,29 +33,34 @@ struct ObatWidgetView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
+
             segmentedTab
 
-            if displayedItems.isEmpty {
-                Text("Belum ada obat di kategori ini")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.top, 8)
-            } else {
-                VStack(alignment: .leading, spacing: 0) {
-                    ForEach(Array(displayedItems.enumerated()), id: \.element.id) { index, item in
-                        rowView(for: item)
+            Group {
+                if displayedItems.isEmpty {
+                    Text("Belum ada obat di kategori ini")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                } else {
+                    VStack(alignment: .leading, spacing: 0) {
+                        ForEach(Array(displayedItems.enumerated()), id: \.element.id) { index, item in
+                            rowView(for: item)
+                                .frame(height: rowHeight, alignment: .center)
 
-                        if index < displayedItems.count - 1 {
-                            Divider()
+                            if index < displayedItems.count - 1 {
+                                Divider()
+                            }
                         }
                     }
                 }
             }
+            .frame(height: listAreaHeight, alignment: .top)
 
             Spacer(minLength: 0)
         }
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .widgetURL(URL(string: "a09c3://obat"))
     }
 
@@ -93,10 +108,10 @@ struct ObatWidgetView: View {
                     Text("Kondisi: \(kondisi)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                        .lineLimit(2)
+                        .lineLimit(1)
                 }
             }
-            .padding(.vertical, 6)
+            .frame(maxWidth: .infinity, alignment: .leading)
         } else {
             HStack {
                 Text(item.nama)
@@ -105,9 +120,8 @@ struct ObatWidgetView: View {
                 Text(item.frekuensi)
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                    .lineLimit(2)
+                    .lineLimit(1)
             }
-            .padding(.vertical, 6)
         }
     }
 }
