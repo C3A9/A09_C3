@@ -136,6 +136,10 @@ struct AddKonsul: View {
                 }
             }
         }
+        .onTapGesture {
+            isTextFieldFocused = false
+        }
+        .scrollDismissesKeyboard(.immediately)
         .onAppear(perform: loadExistingData)
         .alert(cancelAlertTitle, isPresented: $showCancelAlert) {
             Group {
