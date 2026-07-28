@@ -10,6 +10,7 @@ import SwiftData
 
 struct ObatAddView: View {
 
+    @FocusState private var isTextFieldFocused: Bool
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
@@ -43,6 +44,7 @@ struct ObatAddView: View {
         ) {
             Section {
                 TextField("Tambahkan Nama Obat", text: $viewModel.nama)
+                    .focused($isTextFieldFocused)
                 if !viewModel.isValidMedicineName {
                     Text("Nama obat tidak boleh mengandung simbol atau karakter khusus")
                         .font(.caption)
@@ -58,12 +60,6 @@ struct ObatAddView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    .animation(
-                        reduceMotion ? nil : .default,
-                        value: selectedTab
-                    )
-                    .labelsHidden()
-                    .fixedSize()
                     .tint(.secondary)
                 }
                 .accessibilityElement(children: .ignore)
@@ -82,7 +78,8 @@ struct ObatAddView: View {
                                 viewModel.updateDosis(newValue)
                             }
                             .multilineTextAlignment(.trailing)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(viewModel.dosis.isEmpty ? .secondary : .primary)
+                            .focused($isTextFieldFocused)
                         
                         Text(viewModel.satuanDosis)
                             .foregroundStyle(.secondary)
@@ -110,11 +107,8 @@ struct ObatAddView: View {
                         Text(keterangan.rawValue).tag(keterangan)
                     }
                 }
+                .pickerStyle(.menu)
                 .tint(.secondary)
-                .animation(
-                    reduceMotion ? nil : .default,
-                    value: selectedTab
-                )
                 
                 VStack(alignment: .leading, spacing: 15) {
                     Text("Waktu Minum")
@@ -127,10 +121,6 @@ struct ObatAddView: View {
                         .tint(.secondary)
                     }
                     .pickerStyle(.segmented)
-                    .animation(
-                        reduceMotion ? nil : .default,
-                        value: viewModel.jenisJadwal
-                    )
                     .accessibilityLabel("Jenis jadwal minum obat")
 
                 }
@@ -139,7 +129,7 @@ struct ObatAddView: View {
                 if viewModel.isKondisional {
                     TextField("Detail kondisi (cth: saat demam)", text: $viewModel.kondisiDetail)
                         .accessibilityLabel("Detail kondisi obat kondisional. Contoh: saat demam")
-
+                        .focused($isTextFieldFocused)
                     if viewModel.attemptedSave && viewModel.kondisiDetail.trimmingCharacters(in: .whitespaces).isEmpty {
                         Text("Detail kondisi wajib diisi")
                             .font(.caption)
@@ -149,6 +139,12 @@ struct ObatAddView: View {
                 }
             }
         }
+        .simultaneousGesture(
+            TapGesture().onEnded {
+                isTextFieldFocused = false
+            }
+        )
+        .scrollDismissesKeyboard(.immediately)
         .alert("Batalkan penambahan obat?", isPresented: $viewModel.showCancelAlert) {
             Button("Batalkan", role: .destructive) {
                 dismiss()
