@@ -91,9 +91,6 @@ struct AddPantauan: View {
                 }
             }
         }
-        .onTapGesture {
-            isTextFieldFocused = false
-        }
         .scrollDismissesKeyboard(.immediately)
         .onAppear(perform: loadExistingData)
         .alert("Batalkan penambahan pantauan?", isPresented: $showCancelAlert) {
