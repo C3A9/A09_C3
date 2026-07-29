@@ -11,7 +11,6 @@ struct ExpandableDatePicker: View {
     let label: String
     @Binding var selection: Date
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
     @State private var isExpanded = false
     
@@ -31,12 +30,8 @@ struct ExpandableDatePicker: View {
     var body: some View {
         Button {
             dismissKeyboard()
-            if reduceMotion {
+            withAnimation(.easeOut(duration: 0.2)) {
                 isExpanded.toggle()
-            } else {
-                withAnimation(.easeOut(duration: 0.2)) {
-                    isExpanded.toggle()
-                }
             }
         } label: {
             HStack {
@@ -52,10 +47,7 @@ struct ExpandableDatePicker: View {
                         .padding(.vertical, 6)
                         .background(Color.gray.opacity(0.16))
                         .clipShape(Capsule())
-                        .animation(
-                            reduceMotion ? nil : .easeOut(duration: 0.2),
-                            value: isExpanded
-                        )
+                        .animation(.easeOut(duration: 0.2), value: isExpanded)
                 }
             }
         }
