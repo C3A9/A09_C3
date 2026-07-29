@@ -30,7 +30,7 @@ final class SharingManager {
         
         let careGroup = CareGroupModel(patientName: patientName)
         careGroup.zoneName = zoneID.zoneName
-        careGroup.zoneOwnerName = zoneID.ownerName 
+        careGroup.zoneOwnerName = zoneID.ownerName
         careGroup.rootRecordName = rootID.recordName
         careGroup.isOwner = true
         context.insert(careGroup)
@@ -75,5 +75,20 @@ final class SharingManager {
             try await Task.sleep(nanoseconds: 500_000_000)
             return try await createShareWithRetry(rootID: rootID, careGroup: careGroup, attemptsLeft: attemptsLeft - 1)
         }
+    }
+}
+
+extension SharingManager {
+    func setupZoneSubscription(for careGroup: CareGroupModel) async throws {
+        let zoneID = CKRecordZone.ID(zoneName: careGroup.zoneName, ownerName: careGroup.zoneOwnerName)
+        let subscriptionID = "zone-changes-\(zoneID.zoneName)"
+        
+        let subscription = CKRecordZoneSubscription(zoneID: zoneID, subscriptionID: subscriptionID)
+        let notificationInfo = CKSubscription.NotificationInfo()
+        notificationInfo.shouldSendContentAvailable = true   // silent push, tidak muncul banner
+        subscription.notificationInfo = notificationInfo
+        
+        let database = careGroup.isOwner ? privateDatabase : sharedDatabase
+        _ = try await database.save(subscription)
     }
 }
