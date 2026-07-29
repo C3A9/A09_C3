@@ -14,12 +14,13 @@ final class CareGroupModel {
     var id: UUID = UUID()
     var patientName: String = ""
     var zoneName: String = ""
+    var zoneOwnerName: String = CKCurrentUserDefaultName
     var rootRecordName: String = ""
     var isOwner: Bool = true
-    var hasMigratedLegacyData: Bool = false 
+    var hasMigratedLegacyData: Bool = false
+    var changeTokenData: Data?
     var createdAt: Date = Date.now
-    var zoneOwnerName: String = CKCurrentUserDefaultName
-
+    
     @Relationship(deleteRule: .cascade, inverse: \Obat.careGroup)
     var obatList: [Obat]? = []
     @Relationship(deleteRule: .cascade, inverse: \PantauanModel.careGroup)

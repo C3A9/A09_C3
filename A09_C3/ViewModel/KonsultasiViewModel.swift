@@ -41,7 +41,10 @@ class KonsultasiViewModel {
             content: content
         )
         modelContext.insert(konsultasi)
+        try modelContext.save()
+        pushIfShared(konsultasi)
     }
+    
     func update(_ konsultasi: KonsulModel, namaDokter: String, tanggal: Date, content: String) throws {
         guard !namaDokter.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw KonsultasiValidationError.emptyDokter
@@ -53,6 +56,9 @@ class KonsultasiViewModel {
         konsultasi.namaDokter = namaDokter
         konsultasi.tanggalKonsultasi = tanggal
         konsultasi.content = content
+        
+        try modelContext.save()
+        pushIfShared(konsultasi)
     }
     
     func fetchAll() -> [KonsulModel] {
@@ -62,8 +68,22 @@ class KonsultasiViewModel {
         return (try? modelContext.fetch(descriptor)) ?? []
     }
     
-    func delete(_ pantauan: KonsulModel) {
-        modelContext.delete(pantauan)
+    func delete(_ konsultasi: KonsulModel) {
+        let isOwner = konsultasi.careGroup?.isOwner ?? true
+        modelContext.delete(konsultasi)
         try? modelContext.save()
+        Task { await ShareSyncService.shared.deleteRemote(konsultasi, isOwner: isOwner) }
+    }
+    
+    private func pushIfShared(_ konsultasi: KonsulModel) {
+        let context = modelContext
+        Task { @MainActor in
+            guard let careGroup = try? context.fetch(FetchDescriptor<CareGroupModel>()).first else { return }
+            do {
+                try await ShareSyncService.shared.push(konsultasi, isOwner: careGroup.isOwner)
+            } catch {
+                print("🔴 [SYNC] Gagal push Konsultasi \(konsultasi.id): \(error)")
+            }
+        }
     }
 }
