@@ -58,7 +58,7 @@ struct RingkasanView: View {
                 if isDataKosong {
                     ScrollView {
                         EmptyStateView(message: "Tambahkan Pantauan atau Konsultasi untuk melihat Ringkasan")
-                            .frame(maxWidth: .infinity, minHeight: 400)
+                            .frame(maxWidth: .infinity, minHeight: 750)
                     }
                     .refreshable {
                         await syncThenGenerateRingkasan()

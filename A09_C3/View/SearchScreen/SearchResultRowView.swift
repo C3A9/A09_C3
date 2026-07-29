@@ -13,7 +13,7 @@ struct SearchResultRowView: View {
     
     private func highlighted(_ text: String) -> AttributedString {
         var attributed = AttributedString(text)
-        guard let range = attributed.range(of: keyword, options: .caseInsensitive) else {
+        guard let range = attributed.range(of: keyword, options: [.caseInsensitive, .diacriticInsensitive]) else {
             return attributed
         }
         attributed[range].font = .body.bold()

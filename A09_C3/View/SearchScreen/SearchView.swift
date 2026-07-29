@@ -109,7 +109,7 @@ struct SearchView: View {
     ) -> some View {
         List {
             ForEach(results, id: \.category) { group in
-                Section(group.category.rawValue) {
+                Section {
                     ForEach(group.items) { item in
                         SearchResultRowView(item: item, keyword: trimmedQuery)
                             .contentShape(Rectangle())
@@ -118,6 +118,9 @@ struct SearchView: View {
                             }
                             .allowsHitTesting(item.category != .obat)
                     }
+                } header: {
+                    Text(verbatim: group.category.rawValue)
+                        .spokenIn("id_ID")
                 }
             }
         }
