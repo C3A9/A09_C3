@@ -22,7 +22,8 @@ struct ObatRowView: View {
     private func highlighted(_ text: String) -> AttributedString {
         var attributed = AttributedString(text)
         guard let keyword, !keyword.isEmpty,
-              let range = attributed.range(of: keyword, options: .caseInsensitive) else {
+              let range = attributed.range(of: keyword, options: [.caseInsensitive, .diacriticInsensitive])
+        else {
             return attributed
         }
         attributed[range].font = .body.bold()

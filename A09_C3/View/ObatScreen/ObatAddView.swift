@@ -14,7 +14,6 @@ struct ObatAddView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
     var dynamicLayout: AnyLayout {
         dynamicTypeSize.isAccessibilitySize

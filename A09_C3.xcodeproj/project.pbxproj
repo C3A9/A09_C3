@@ -78,6 +78,7 @@
 		E9CA05D63017448000FD23E9 /* Exceptions for "A09_C3" folder in "ObatWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AppIcon.icon,
 				Model/CareGroupModel.swift,
 				Model/KonsultasiModel.swift,
 				Model/ObatModel.swift,
@@ -417,6 +418,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = A09_C3/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Teman Rawat";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Aplikasi membutuhkan akses mikrofon untuk fitur dikte";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Aplikasi membutuhkan akses pengenalan suara untuk fitur dikte";
@@ -459,6 +461,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = A09_C3/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Teman Rawat";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Aplikasi membutuhkan akses mikrofon untuk fitur dikte";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Aplikasi membutuhkan akses pengenalan suara untuk fitur dikte";
