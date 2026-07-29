@@ -34,7 +34,7 @@ final class SearchViewModel {
     func searchObat(matching keyword: String) -> [SearchResultItem] {
         let all = (try? modelContext.fetch(FetchDescriptor<Obat>())) ?? []
         return all
-            .filter { $0.nama.localizedCaseInsensitiveContains(keyword) }
+            .filter { $0.nama.localizedStandardContains(keyword) }
             .map { obat in
                 let dosisWithUnit: String = {
                     switch obat.jenis {
@@ -56,7 +56,7 @@ final class SearchViewModel {
     func searchPantauan(matching keyword: String) -> [SearchResultItem] {
         let all = (try? modelContext.fetch(FetchDescriptor<PantauanModel>())) ?? []
         return all
-            .filter { $0.pantauanBody.localizedCaseInsensitiveContains(keyword) }
+            .filter { $0.pantauanBody.localizedStandardContains(keyword) }
             .map { pantauan in
                 SearchResultItem(
                     category: .pantauan,
@@ -74,8 +74,8 @@ final class SearchViewModel {
         let all = (try? modelContext.fetch(FetchDescriptor<KonsulModel>())) ?? []
         return all
             .filter {
-                $0.namaDokter.localizedCaseInsensitiveContains(keyword) ||
-                $0.content.localizedCaseInsensitiveContains(keyword)
+                $0.namaDokter.localizedStandardContains(keyword) ||
+                $0.content.localizedStandardContains(keyword)
             }
             .map { konsul in
                 let tanggal = konsul.tanggalKonsultasi.formatted(

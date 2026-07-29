@@ -6,7 +6,6 @@ import WidgetKit
 struct ObatListView: View {
 
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Query(sort: \Obat.createdAt, order: .reverse)
     private var allObat: [Obat]
 
@@ -48,10 +47,6 @@ struct ObatListView: View {
                         }
                     }
                     .pickerStyle(.segmented)
-                    .animation(
-                        reduceMotion ? nil : .default,
-                        value: selectedTab
-                    )
                     .padding(.horizontal)
                     .accessibilityLabel("Filter obat")
                     .accessibilityValue(selectedTab.rawValue)
