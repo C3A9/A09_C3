@@ -41,7 +41,7 @@ struct RingkasanView: View {
         ? AnyLayout(VStackLayout(alignment: .leading))
         : AnyLayout(HStackLayout(alignment: .center))
     }
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -189,6 +189,7 @@ struct RingkasanView: View {
             }
             
             let (share, container) = try await SharingManager.shared.createShare(for: careGroup)
+            try? await SharingManager.shared.setupZoneSubscription(for: careGroup)
             activeShare = share
             shareContainer = container
             isPresentingShareSheet = true
@@ -198,30 +199,24 @@ struct RingkasanView: View {
     }
     
     @MainActor
-    private func syncOnly() async {
-        guard let careGroup = careGroups.first else { return }
-        do {
-            try await ShareSyncService.shared.refreshSharedData(careGroup: careGroup, context: modelContext)
-        } catch {
-            print("Auto-sync awal gagal: \(error)")
-        }
-    }
-    
-    @MainActor
     private func syncThenGenerateRingkasan() async {
-        if let careGroup = careGroups.first {
-            do {
-                if careGroup.isOwner {
-                    await ShareSyncService.shared.pushUnsyncedRecords(for: careGroup, context: modelContext)
-                }
-                try await ShareSyncService.shared.refreshSharedData(careGroup: careGroup, context: modelContext)
-            } catch {
-                syncErrorMessage = error.localizedDescription
+        let task = Task {
+            if let careGroup = careGroups.first {
+                await ShareSyncService.shared.performSync(for: careGroup, context: modelContext)
+            }
+            if let viewModel {
+                await viewModel.generateSemuaRingkasan(pantauanList: pantauanList, konsulList: konsulList)
             }
         }
-        
-        if let viewModel {
-            await viewModel.generateSemuaRingkasan(pantauanList: pantauanList, konsulList: konsulList)
+        await task.value
+    }
+
+    @MainActor
+    private func syncOnly() async {
+        let task = Task {
+            guard let careGroup = careGroups.first else { return }
+            await ShareSyncService.shared.performSync(for: careGroup, context: modelContext)
         }
+        await task.value
     }
 }

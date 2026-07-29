@@ -18,7 +18,7 @@ enum FrekuensiChip: Equatable {
 
 @Observable
 final class ObatAddViewModel {
-
+    
     // MARK: - Form State (AC: User can input Obat details manually)
     var nama: String = ""
     var jenis: JenisObat = .tablet
@@ -26,19 +26,19 @@ final class ObatAddViewModel {
     var keterangan: KeteranganObat = .sebelumMakan
     var isKondisional: Bool = false
     var kondisiDetail: String = ""
-
+    
     // Frekuensi sekarang berupa 2 chip + wheel picker angka
     var jumlahPerHari: Int = 1       // "kali sehari"
     var jumlahPerKali: Int = 1       // sesuai satuan Jenis
     var activeChip: FrekuensiChip = .jumlahPerHari
-
+    
     // Wheel picker baru muncul setelah salah satu chip Frekuensi di-tap.
     // Default false supaya saat halaman pertama dibuka, picker belum tampil.
     var isPickerExpanded: Bool = false
-
+    
     var showCancelAlert = false
     var attemptedSave = false
-
+    
     var jenisJadwal: ObatTab {
         get { isKondisional ? .kondisional : .rutin }
         set { isKondisional = (newValue == .kondisional) }
@@ -60,57 +60,57 @@ final class ObatAddViewModel {
         case .sirup: return "ml"
         }
     }
-
+    
     // Gabungan nilai Frekuensi yang akan disimpan ke model (field `frekuensi: String`)
     var frekuensiText: String {
         "\(jumlahPerHari) kali sehari, \(jumlahPerKali) \(satuanJumlah)"
     }
     
     private static let allowedNameCharacters: CharacterSet = {
-            var allowed = CharacterSet.letters
-            allowed.formUnion(.decimalDigits)
-            allowed.formUnion(.whitespaces)
-            allowed.insert(charactersIn: "-/")
-            return allowed
-        }()
+        var allowed = CharacterSet.letters
+        allowed.formUnion(.decimalDigits)
+        allowed.formUnion(.whitespaces)
+        allowed.insert(charactersIn: "-/")
+        return allowed
+    }()
     
-
+    
     // MARK: - Validation
     // AC: User can save the Obat note only when all required information has been provided
     
     var isValidMedicineName: Bool {
-            nama.unicodeScalars.allSatisfy { Self.allowedNameCharacters.contains($0) }
-        }
+        nama.unicodeScalars.allSatisfy { Self.allowedNameCharacters.contains($0) }
+    }
     
     
     var isFormValid: Bool {
         let trimmedDosis = dosis.trimmingCharacters(in: .whitespaces)
-
+        
         let baseValid = !nama.trimmingCharacters(in: .whitespaces).isEmpty
-            && isValidMedicineName
-            && !trimmedDosis.isEmpty
-            && (Int(trimmedDosis) ?? 0) > 0
-            && jumlahPerHari > 0
-            && jumlahPerKali > 0
-
+        && isValidMedicineName
+        && !trimmedDosis.isEmpty
+        && (Int(trimmedDosis) ?? 0) > 0
+        && jumlahPerHari > 0
+        && jumlahPerKali > 0
+        
         if isKondisional {
             return baseValid && !kondisiDetail.trimmingCharacters(in: .whitespaces).isEmpty
         }
-
+        
         return baseValid
     }
-
+    
     // Cek apakah user sudah mengisi sesuatu, untuk menentukan perlu konfirmasi batal atau tidak
     var hasUnsavedChanges: Bool {
         !nama.isEmpty
-            || !dosis.isEmpty
-            || isKondisional
-            || !kondisiDetail.isEmpty
+        || !dosis.isEmpty
+        || isKondisional
+        || !kondisiDetail.isEmpty
     }
-
+    
     // MARK: - Actions
     
-
+    
     // AC: User can only input numeric value for Dosis, angka "0" dianggap kosong
     func updateDosis(_ newValue: String) {
         let filtered = newValue.filter(\.isNumber)
@@ -120,7 +120,7 @@ final class ObatAddViewModel {
             dosis = filtered
         }
     }
-
+    
     //Frekuensi Picker Actions
     func selectFrekuensiChip(_ chip: FrekuensiChip) {
         if activeChip == chip && isPickerExpanded {
@@ -140,11 +140,11 @@ final class ObatAddViewModel {
             dismiss()
         }
     }
-
+    
     func save(modelContext: ModelContext, dismiss: () -> Void) {
         attemptedSave = true
         guard isFormValid else { return }
-
+        
         let newObat = Obat(
             nama: nama.trimmingCharacters(in: .whitespaces),
             jenis: jenis,
@@ -155,7 +155,21 @@ final class ObatAddViewModel {
             kondisiDetail: isKondisional ? kondisiDetail.trimmingCharacters(in: .whitespaces) : nil
         )
         modelContext.insert(newObat)
-//        WidgetCenter.shared.reloadTimelines(ofKind: "ObatWidget")
+        try? modelContext.save()   // BARU — eksplisit, sebelumnya cuma andalkan autosave
+        pushIfShared(newObat, context: modelContext)   // BARU
+        //    WidgetCenter.shared.reloadTimelines(ofKind: "ObatWidget")
         dismiss()
     }
+    
+    private func pushIfShared(_ obat: Obat, context: ModelContext) {
+        Task { @MainActor in
+            guard let careGroup = try? context.fetch(FetchDescriptor<CareGroupModel>()).first else { return }
+            do {
+                try await ShareSyncService.shared.push(obat, isOwner: careGroup.isOwner)
+            } catch {
+                print("🔴 [SYNC] Gagal push Obat \(obat.id): \(error)")
+            }
+        }
+    }
+    
 }

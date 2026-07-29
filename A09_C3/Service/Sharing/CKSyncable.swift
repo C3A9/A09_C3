@@ -21,7 +21,7 @@ protocol CKSyncable: AnyObject {
 extension CKSyncable {
     func toCKRecord() -> CKRecord? {
         guard let careGroup else { return nil }
-        let zoneID = CKRecordZone.ID(zoneName: careGroup.zoneName)
+        let zoneID = CKRecordZone.ID(zoneName: careGroup.zoneName, ownerName: careGroup.zoneOwnerName)
         let recordID = CKRecord.ID(recordName: ckRecordName ?? id.uuidString, zoneID: zoneID)
         let record = CKRecord(recordType: Self.ckRecordType, recordID: recordID)
 
