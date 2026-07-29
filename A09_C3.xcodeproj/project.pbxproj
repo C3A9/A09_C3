@@ -203,7 +203,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				13150B4B300635550096FDB2 /* A09_C3 */,
-				13150B5D300635550096FDB2 /* A09_C3Tests */,
 			);
 			name = A09_C3;
 			packageProductDependencies = (
@@ -268,7 +267,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				13150B5D300635550096FDB2 /* A09_C3Tests */,
 				E9CA05A630173ED900FD23E9 /* ObatWidget */,
 			);
 			name = ObatWidgetExtension;
