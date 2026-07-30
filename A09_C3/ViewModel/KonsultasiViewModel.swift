@@ -76,13 +76,18 @@ class KonsultasiViewModel {
     }
     
     private func pushIfShared(_ konsultasi: KonsulModel) {
-        let context = modelContext
+        guard let careGroup = try? modelContext.fetch(FetchDescriptor<CareGroupModel>()).first else {
+            return
+        }
+        
         Task { @MainActor in
-            guard let careGroup = try? context.fetch(FetchDescriptor<CareGroupModel>()).first else { return }
             do {
-                try await ShareSyncService.shared.push(konsultasi, isOwner: careGroup.isOwner)
+                try await ShareSyncService.shared.push(
+                    konsultasi,
+                    isOwner: careGroup.isOwner
+                )
             } catch {
-                print("🔴 [SYNC] Gagal push Konsultasi \(konsultasi.id): \(error)")
+                print("🔴 [SYNC] Gagal push Pantauan \(konsultasi.id): \(error)")
             }
         }
     }

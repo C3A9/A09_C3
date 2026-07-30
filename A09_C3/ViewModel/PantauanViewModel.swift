@@ -56,11 +56,16 @@ final class PantauanViewModel {
 
     // BARU — helper, dipakai add dan update
     private func pushIfShared(_ pantauan: PantauanModel) {
-        let context = modelContext
+        guard let careGroup = try? modelContext.fetch(FetchDescriptor<CareGroupModel>()).first else {
+            return
+        }
+
         Task { @MainActor in
-            guard let careGroup = try? context.fetch(FetchDescriptor<CareGroupModel>()).first else { return }
             do {
-                try await ShareSyncService.shared.push(pantauan, isOwner: careGroup.isOwner)
+                try await ShareSyncService.shared.push(
+                    pantauan,
+                    isOwner: careGroup.isOwner
+                )
             } catch {
                 print("🔴 [SYNC] Gagal push Pantauan \(pantauan.id): \(error)")
             }

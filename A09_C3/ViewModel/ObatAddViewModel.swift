@@ -162,8 +162,11 @@ final class ObatAddViewModel {
     }
     
     private func pushIfShared(_ obat: Obat, context: ModelContext) {
+        guard let careGroup = try? context.fetch(FetchDescriptor<CareGroupModel>()).first else {
+            return
+        }
+
         Task { @MainActor in
-            guard let careGroup = try? context.fetch(FetchDescriptor<CareGroupModel>()).first else { return }
             do {
                 try await ShareSyncService.shared.push(obat, isOwner: careGroup.isOwner)
             } catch {

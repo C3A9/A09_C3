@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "7BA27187-4F2E-40DC-9223-65D81E54229C",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:A09_C3.xcodeproj",
+        "identifier" : "13150B59300635550096FDB2",
+        "name" : "A09_C3Tests"
+      }
+    }
+  ],
+  "version" : 1
+}

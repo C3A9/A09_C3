@@ -54,7 +54,7 @@
 		13150B49300635550096FDB2 /* A09_C3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = A09_C3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13150B5A300635550096FDB2 /* A09_C3Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = A09_C3Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		13150B64300635550096FDB2 /* A09_C3UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = A09_C3UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		136A16CE3019F8B500B25DD5 /* A09_C3Tests */ = {isa = PBXFileReference; lastKnownFileType = folder; path = A09_C3Tests; sourceTree = "<group>"; };
+		360B8BB2301A2F5A00F6FD2D /* A09_C3.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = A09_C3.xctestplan; sourceTree = "<group>"; };
 		E9CA05A030173ED900FD23E9 /* ObatWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ObatWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9CA05A230173ED900FD23E9 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		E9CA05A430173ED900FD23E9 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -156,7 +156,7 @@
 		13150B40300635550096FDB2 = {
 			isa = PBXGroup;
 			children = (
-				136A16CE3019F8B500B25DD5 /* A09_C3Tests */,
+				360B8BB2301A2F5A00F6FD2D /* A09_C3.xctestplan */,
 				E9CA05BA30173FEA00FD23E9 /* ObatWidgetExtension.entitlements */,
 				13150B4B300635550096FDB2 /* A09_C3 */,
 				13150B5D300635550096FDB2 /* A09_C3Tests */,
