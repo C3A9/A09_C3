@@ -26,7 +26,7 @@ enum SharedModelContainer {
             fatalError("Tidak bisa mengakses App Group container")
         }
 
-        let configuration = ModelConfiguration(schema: schema, url: groupURL)
+        let configuration = ModelConfiguration(schema: schema, url: groupURL,cloudKitDatabase: .none)
 
         do {
             return try ModelContainer(for: schema, configurations: [configuration])
