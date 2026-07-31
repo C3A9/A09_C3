@@ -179,7 +179,7 @@ struct RingkasanView: View {
                 careGroup = existing
             } else {
                 careGroup = try await SharingManager.shared.createCareGroup(
-                    patientName: "Pasien Saya",
+                    patientName: "Catatan Lansia",
                     context: modelContext
                 )
                 await ShareSyncService.shared.migrateExistingRecords(
